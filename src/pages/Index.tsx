@@ -1,14 +1,28 @@
-// Update this page (the content is just a fallback if you fail to update the page)
+import { useState } from 'react';
+import Login from '@/components/Login';
+import StudentDashboard from '@/components/StudentDashboard';
+import AdminDashboard from '@/components/AdminDashboard';
 
 const Index = () => {
-  return (
-    <div className="flex min-h-screen items-center justify-center bg-background">
-      <div className="text-center">
-        <h1 className="mb-4 text-4xl font-bold">Welcome to Your Blank App</h1>
-        <p className="text-xl text-muted-foreground">Start building your amazing project here!</p>
-      </div>
-    </div>
-  );
+  const [user, setUser] = useState<{ role: 'student' | 'admin'; id: string } | null>(null);
+
+  const handleLogin = (role: 'student' | 'admin', userId: string) => {
+    setUser({ role, id: userId });
+  };
+
+  const handleLogout = () => {
+    setUser(null);
+  };
+
+  if (!user) {
+    return <Login onLogin={handleLogin} />;
+  }
+
+  if (user.role === 'student') {
+    return <StudentDashboard userId={user.id} onLogout={handleLogout} />;
+  }
+
+  return <AdminDashboard userId={user.id} onLogout={handleLogout} />;
 };
 
 export default Index;
